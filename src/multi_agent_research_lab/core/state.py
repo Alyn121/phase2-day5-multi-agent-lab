@@ -32,3 +32,11 @@ class ResearchState(BaseModel):
 
     def add_trace_event(self, name: str, payload: dict[str, Any]) -> None:
         self.trace.append({"name": name, "payload": payload})
+
+    @property
+    def total_input_tokens(self) -> int:
+        return sum(res.metadata.get("input_tokens", 0) for res in self.agent_results if res.metadata)
+
+    @property
+    def total_output_tokens(self) -> int:
+        return sum(res.metadata.get("output_tokens", 0) for res in self.agent_results if res.metadata)

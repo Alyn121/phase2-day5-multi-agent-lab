@@ -1,12 +1,12 @@
 """Public schemas exchanged between CLI, agents, and evaluators."""
 
-from enum import StrEnum
+from enum import Enum
 from typing import Any
 
 from pydantic import BaseModel, Field
 
 
-class AgentName(StrEnum):
+class AgentName(str, Enum):
     SUPERVISOR = "supervisor"
     RESEARCHER = "researcher"
     ANALYST = "analyst"
@@ -37,5 +37,10 @@ class BenchmarkMetrics(BaseModel):
     run_name: str
     latency_seconds: float
     estimated_cost_usd: float | None = None
+    openai_equivalent_cost_usd: float | None = None
+    input_tokens: int = 0
+    output_tokens: int = 0
+    source_count: int = 0
     quality_score: float | None = Field(default=None, ge=0, le=10)
+    agent_breakdown: dict[str, dict[str, int]] = Field(default_factory=dict)
     notes: str = ""
